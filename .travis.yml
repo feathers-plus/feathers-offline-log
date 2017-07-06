@@ -1,14 +1,16 @@
 language: node_js
 node_js:
-  - 'node'
-  - '6'
-  - '4'
+- node
+- '6'
 addons:
   code_climate:
-    repo_token: 'your repo token'
+    repo_token: 3242ab27d18b4aef72d670a4a84f84c19aee38cf90652423f9a209455e9d231b
 notifications:
   email: false
+  slack:
+    rooms:
+      secure: 12Gv81Z5OKrlpeUZwR4sFjq9xNPhGfsJiDR0cxQjzgZrh47EUwwLVJ6o20GYeSo/m/4uOgjZ08CsyHMi1KtXMAlOi4d4ZwvxhVkAn16YdOik1+H7knE6jqNhMSPuNNdAqbAOmXkgL5yQXatSVi9mx8RRCdERlRQVl0slr9aq/3Ya9tgTLi3rMDbaDF00c+0GsMzDFAYIZszCu7KBroVNjyCgQAs+p/jHTyAR4q/oWEG4t0O3GRe2TQdDA3nVhImn2lQl/cu8HYRoAPJFVfAwo91L693rYSBxJkJnWruLabt8K/52JT3LgG+3P0cBCM9jRWJprQ8hhEZzSuLKpOP94chBLUcvszpy8EMDL1SIBZ/1yMj3+IsCZXRjNZrrv3GIdU7dCxmRtHd7r7WUxhBs0dPoXDxdz1bUunuYGAumy8pR7n7AjWUm9dHhxBMhPMurQ5T9PgkokVvD7SwcgvwwSerVy6oUiRNxedaGFfWQ/jK7unM9sC3k4kEsoXsDOgitL+k+cErU95/sPb9N4PVp7LHAg9Yzc1Chj4VOTjNIy5bm+etrWw192H1Js2hqYkGXH/Rlxwg03CJ9Bvmk6z4+ld5pNM+IzuU/cjkUDMGWYM0Hs79CqUkhdQzrPPXuGK7UL1J74lLSyx3E06wHLe0ZgMDagcu/q0t6IRWRw4tLyEg=
 before_script:
-  - npm install -g codeclimate-test-reporter
+- npm install -g codeclimate-test-reporter
 after_script:
-  - codeclimate-test-reporter < coverage/lcov.info
+- codeclimate-test-reporter < coverage/lcov.info
