@@ -1,5 +1,7 @@
 # feathers-offline-log
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/feathersjs/feathers-offline-log.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/feathersjs/feathers-offline-log.png?branch=master)](https://travis-ci.org/feathersjs/feathers-offline-log)
 [![Code Climate](https://codeclimate.com/github/feathersjs/feathers-offline-log/badges/gpa.svg)](https://codeclimate.com/github/feathersjs/feathers-offline-log)
 [![Test Coverage](https://codeclimate.com/github/feathersjs/feathers-offline-log/badges/coverage.svg)](https://codeclimate.com/github/feathersjs/feathers-offline-log/coverage)
