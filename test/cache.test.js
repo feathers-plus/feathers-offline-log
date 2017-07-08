@@ -2,7 +2,7 @@
 const assert = require('chai').assert;
 
 const storageBrowser = require('../src/storage-browser');
-const Cache = require('../src/cache');
+const Cache = require('../src');
 
 let cache;
 

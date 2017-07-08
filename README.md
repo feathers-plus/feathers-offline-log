@@ -6,9 +6,16 @@
 [![Dependency Status](https://img.shields.io/david/feathersjs/feathers-offline-log.svg?style=flat-square)](https://david-dm.org/feathersjs/feathers-offline-log)
 [![Download Status](https://img.shields.io/npm/dm/feathers-offline-log.svg?style=flat-square)](https://www.npmjs.com/package/feathers-offline-log)
 
-> Performant, persistent client-side log
+| Performant, persistent client-side log.
 
-**Work in progress. Do not use.**
+Maintain a transaction log on the client.
+Browser client logs are kept in IndexedDB, WebSQL or, lastly, localStorage.
+Log entries are added in an efficient manner, whether the log is small or very large
+JavaScript objects may be also be added in an efficient manner.
+
+> **ProTip:** Used for feathers-offline's optimistic mutation log, while client is disconnected.
+
+The cache is efficient because it 
 
 ## Installation
 
@@ -25,7 +32,25 @@ Please refer to the [feathers-offline-log documentation](http://docs.feathersjs.
 Here's an example of a Feathers server that uses `feathers-offline-log`. 
 
 ```js
-// to do
+const storageBrowser = require('feathers-offline-log/storage-browser');
+const Cache = require('feathers-offline-log');
+
+const cache = new Cache(storageBrowser, { chunkMaxLen: 500000 }); // logs stored in 0.5 meg chunks
+cache.config()
+  .then(() => cache.addObj(obj1))
+  .then(() => cache.addObj(obj2))
+  .then(() => cache.addObj(obj3))
+  
+  .then(() => cache.length()) 
+  .then(chunkCount => console.log(`There are ${chunkCount} chunks.`))
+    
+  .then(() => cache.getOldestChunk()) 
+  .then(chunk => JSON.parse(`[${chunk}]`)) 
+  .then(chunkObj => console.log(chunkObj))
+  .then(() => cache.removeOldestChunk()) 
+  .then(() => ) 
+  .then(() => ) 
+  .then(() => ) 
 ```
 
 ## License
