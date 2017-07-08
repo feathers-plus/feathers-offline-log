@@ -65,7 +65,7 @@ export default class Cache {
   removeOldestChunk() {
     debug('removeOldestChunk entered');
     return this._getChunkKeys()
-      .then(keys => this._storageHandler.returnItem(keys[0]));
+      .then(keys => this._storageHandler.removeItem(keys[0]));
   }
   
   clear() {
