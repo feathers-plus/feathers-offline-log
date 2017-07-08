@@ -3,10 +3,10 @@ import makeDebug from 'debug';
 const debug = makeDebug('log-cache');
 
 export default class Cache {
-  constructor(storage, options = {}) {
+  constructor(storageHandler, options = {}) {
     this._chunkMaxLen = options.chunkMaxLen || 500000; // 0.5 meg
     this._sep = options.sep || ',';
-    this._storage = storage;
+    this._storageHandler = storageHandler;
     this._currChunkKey = '';
     this._currChunk = '';
   }
@@ -14,7 +14,7 @@ export default class Cache {
   config(options = {}) {
     debug('config started', options);
     
-    return this._storage.config(options)
+    return this._storageHandler.config(options)
       .then(() => this._getChunkKeys())
       .then(keys => {
         if (keys.length) {
@@ -59,23 +59,23 @@ export default class Cache {
   getOldestChunk() {
     debug('getOldestChunk entered');
     return this._getChunkKeys()
-      .then(keys => this._storage.getItem(keys[0]));
+      .then(keys => this._storageHandler.getItem(keys[0]));
   }
   
   removeOldestChunk() {
     debug('removeOldestChunk entered');
     return this._getChunkKeys()
-      .then(keys => this._storage.returnItem(keys[0]));
+      .then(keys => this._storageHandler.returnItem(keys[0]));
   }
   
   clear() {
     debug('clear entered');
-    return this._storage.clear();
+    return this._storageHandler.clear();
   }
   
   _getChunkKeys() {
     debug('_getChunkKeys entered');
-    return this._storage.keys()
+    return this._storageHandler.keys()
       .then(keys => keys.filter(key => key.charAt(0) === '_').sort());
   }
   
@@ -85,6 +85,6 @@ export default class Cache {
   
   _flushCurrChunk() {
     debug('_flushCurrChunk entered. key', this._currChunkKey);
-    return this._storage.setItem(this._currChunkKey, this._currChunk);
+    return this._storageHandler.setItem(this._currChunkKey, this._currChunk);
   }
 };
