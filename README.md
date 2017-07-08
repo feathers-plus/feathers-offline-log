@@ -13,12 +13,13 @@ Log entries are added in an efficient manner, whether the log is small or very l
 JavaScript objects are also handled in an efficient manner.
 
 > **ProTip:** Used for feathers-offline's optimistic mutation log,
-which is needed while the client is disconnected.
+which is updated while the client is disconnected.
 
 The cache stringifies an added object just once,
 eliminating the multiple stringifications of alternative designs.
-The cache bundles logs into chunks, whose maximum size you determine (0.5 meg default).
-This avoids both the persisting of large blobs and the inefficiencies of writing individual log items.
+The cache bundles logs into chunks, whose maximum size you can specify (0.5 meg default).
+This avoids both the repetitive persisting of large blobs
+and the inefficiencies of writing individual log items.
 
 ## Installation
 
@@ -28,7 +29,7 @@ npm install feathers-offline-log --save
 
 ## Documentation
 
-**cache = new Cache(storageHandler, options)**
+- **cache = new Cache(storageHandler, options)**
 Configure a new cache.
     - `storageHandler` (required, module) - Module responsible for persistence.
         - `/storageBrowser` - Browser support. See example below.
@@ -36,20 +37,18 @@ Configure a new cache.
         - `chunkMaxLen` (optional, number, default 0.5 megs) - Maximum chunk size in chars.
         - `sep` (optional, char, default ',') - Seperator char between logs.
         Objects are always seperated with ','.
-
-**cache.config(options)**
+- **cache.config(options)**
 Configure the storage handler for the cache.
 The options depend on the storage handler.
     - `storageBrowser` - See options for
     [localforage](http://localforage.github.io/localForage/)
-    
-**cache.add(str)** - Add `str` to the logs.
-**cache.addObj(obj)** - Add stringified `obj` to the logs.
-**cache.getOldestChunk()** - Returns the oldest chunk of logs.
+- **cache.add(str)** - Add `str` to the logs.
+- **cache.addObj(obj)** - Add stringified `obj` to the logs.
+- **cache.getOldestChunk()** - Returns the oldest chunk of logs.
 If it consists solely of added objects,
 then `JSON.stringify('[' + chunk + ']')` will return an array of POJO.
-**cache.removeOldestChunk()** - Remove the oldest chunk from the log.
-**cache.clear()** - Remove all chunks.
+- **cache.removeOldestChunk()** - Remove the oldest chunk from the log.
+- **cache.clear()** - Remove all chunks.
 
 ## Complete Example
 
