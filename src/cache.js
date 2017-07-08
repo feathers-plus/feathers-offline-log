@@ -1,16 +1,14 @@
 
-import { logAndThrow } from './utils';
-
 import makeDebug from 'debug';
 const debug = makeDebug('log-cache');
 
 export default class Cache {
   constructor(storage, options = {}) {
-    this._storage = storage;
-    this._currChunkKey = -1;
-    this._currChunk = '';
-    this._chunkMaxLen = options.chunkMaxLen || 500000;
+    this._chunkMaxLen = options.chunkMaxLen || 500000; // 0.5 meg
     this._sep = options.sep || ',';
+    this._storage = storage;
+    this._currChunkKey = '';
+    this._currChunk = '';
   }
   
   config(options = {}) {
@@ -20,14 +18,13 @@ export default class Cache {
       .then(() => this._getChunkKeys())
       .then(keys => {
         if (keys.length) {
-          this._currChunkKey = keys[keys.length - 1] + 1;
+          this._currChunkKey = this._incrKey(keys[keys.length - 1]);
         } else {
-          this._currChunkKey = 0;
+          this._currChunkKey = '_0';
         }
         
         debug('config ended. _currChunkKey=', this._currChunkKey);
-      })
-      .catch(logAndThrow('cache config'));
+      });
   }
   
   add(str, sep) {
@@ -38,42 +35,37 @@ export default class Cache {
       if (this._currChunk.length + str.length <= this._chunkMaxLen) {
         return resolve();
       }
-    
-      const result = this._flushCurrChunk()
-        .catch(logAndThrow('cache add-flush'))
+  
+      const promise = this._flushCurrChunk()
         .then(() => {
-          this._currChunkKey += 1;
+          this._currChunkKey = this._incrKey(this._currChunkKey);
           this._currChunk = '';
         });
-    
-      return resolve(result);
+  
+      return resolve(promise);
     })
       .then(() => {
         this._currChunk = `${this._currChunk}${this._currChunk.length ? sep : ''}${str}`;
         this._flushCurrChunk();
+        debug('add ended. length', this._currChunk.length);
       })
-      .then(() => debug('add ended'))
-      .catch(logAndThrow('cache'));
   }
   
   addObj(obj) {
+    debug('addObj entered');
     return this.add(JSON.stringify(obj), ',');
   }
 
   getOldestChunk() {
     debug('getOldestChunk entered');
-    
     return this._getChunkKeys()
-      .then(keys => this._storage.getItem(this._makeChunkKey(keys[0])))
-      .catch(logAndThrow('getOldestChunk'));
+      .then(keys => this._storage.getItem(keys[0]));
   }
   
   removeOldestChunk() {
     debug('removeOldestChunk entered');
-    
     return this._getChunkKeys()
-      .then(keys => this._storage.removeItem(this._makeChunkKey(keys[0])))
-      .catch(logAndThrow('removeOldestChunk'));
+      .then(keys => this._storage.returnItem(keys[0]));
   }
   
   clear() {
@@ -81,23 +73,18 @@ export default class Cache {
     return this._storage.clear();
   }
   
-  _makeChunkKey(numb) {
-    return `_${numb + ''}`;
+  _getChunkKeys() {
+    debug('_getChunkKeys entered');
+    return this._storage.keys()
+      .then(keys => keys.filter(key => key.charAt(0) === '_').sort());
   }
   
-  _getChunkKeys() {
-    debug('_getChunkKeys start');
-    return this._storage.keys()
-      .then(keys => {
-        keys = keys.filter(key => key.charAt(0) === '_').map(key => parseInt(key.substr(1), 10)).sort();
-        
-        debug('_getChunkKeys end. keys', keys);
-        return keys;
-      })
+  _incrKey(lastKey) {
+    return `_${(parseInt(lastKey.substr(1), 10) + 1) + ''}`;
   }
   
   _flushCurrChunk() {
     debug('_flushCurrChunk entered. key', this._currChunkKey);
-    return this._storage.setItem(this._makeChunkKey(this._currChunkKey), this._currChunk);
+    return this._storage.setItem(this._currChunkKey, this._currChunk);
   }
 };
