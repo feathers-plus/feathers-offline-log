@@ -59,13 +59,13 @@ export default class Cache {
   getOldestChunk() {
     debug('getOldestChunk entered');
     return this._getChunkKeys()
-      .then(keys => this._storageHandler.getItem(keys[0]));
+      .then(keys => keys.length ? this._storageHandler.getItem(keys[0]) : undefined);
   }
   
   removeOldestChunk() {
     debug('removeOldestChunk entered');
     return this._getChunkKeys()
-      .then(keys => this._storageHandler.removeItem(keys[0]));
+      .then(keys => keys.length ? this._storageHandler.removeItem(keys[0]) : undefined);
   }
   
   clear() {

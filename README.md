@@ -29,28 +29,26 @@ npm install feathers-offline-log --save
 
 ## Documentation
 
-- **cache = new Cache(storageHandler, options)**
-Configure a new cache.
+- **cache = new Cache(storageHandler, options)** - Configure a new cache.
     - `storageHandler` (required, module) - Module responsible for persistence.
         - `/storageBrowser` - Browser support. See example below.
-    - `option` (optional) - Options for the cache.
-        - `chunkMaxLen` (optional, number, default 0.5 megs) - Maximum chunk size in chars.
-        - `sep` (optional, char, default ',') - Seperator char between logs.
-        Objects are always seperated with ','.
-- **cache.config(options)**
-Configure the storage handler for the cache.
+    - `options` (optional) - Options for the cache.
+        - `chunkMaxLen` (optional, number, default 500 000) - Maximum chunk size in chars.
+        - `sep` (optional, char, default ',') - Separator char between log entries.
+        Objects are always separated with ','.
+- **cache.config(options)** - Configure the storage handler for the cache.
 The options depend on the storage handler.
     - `storageBrowser` - See options for
     [localforage](http://localforage.github.io/localForage/)
 - **cache.add(str)** - Add `str` to the logs.
-- **cache.addObj(obj)** - Add stringified `obj` to the logs.
+- **cache.addObj(obj)** - Stringifyy `obj` and add it to the logs.
 - **cache.getOldestChunk()** - Returns the oldest chunk of logs.
 If it consists solely of added objects,
 then `JSON.stringify('[' + chunk + ']')` will return an array of POJO.
 - **cache.removeOldestChunk()** - Remove the oldest chunk from the log.
 - **cache.clear()** - Remove all chunks.
 
-## Complete Example
+## Example
 
 ```js
 const storageBrowser = require('feathers-offline-log/storage-browser');
@@ -61,13 +59,9 @@ cache.config()
   .then(() => cache.addObj(obj1))
   .then(() => cache.addObj(obj2))
   .then(() => cache.addObj(obj3))
-  
-  .then(() => cache.length()) 
-  .then(chunkCount => console.log(`There are ${chunkCount} chunks.`))
-    
+
   .then(() => cache.getOldestChunk()) 
-  .then(chunk => JSON.parse(`[${chunk}]`)) 
-  .then(chunkObj => console.log(chunkObj))
+  .then(chunk => console.log(JSON.parse(`[${chunk}]`))) 
   .then(() => cache.removeOldestChunk()) 
 ```
 
