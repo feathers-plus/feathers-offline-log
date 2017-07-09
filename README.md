@@ -33,14 +33,14 @@ npm install feathers-offline-log --save
 
 - **cache = new Cache(storageHandler, options)** - Configure a new cache.
     - `storageHandler` (required, module) - Module responsible for persistence.
-        - `/storageBrowser` - Browser support. See example below.
+        - `/browserStorage` - Browser support. See example below.
     - `options` (optional) - Options for the cache.
         - `chunkMaxLen` (optional, number, default 500 000) - Maximum chunk size in chars.
         - `sep` (optional, char, default ',') - Separator char between log entries.
         Objects are always separated with ','.
 - **cache.config(options)** - Configure the storage handler for the cache.
 The options depend on the storage handler.
-    - `storageBrowser` - See options for
+    - `browserStorage` - See options for
     [localforage](http://localforage.github.io/localForage/)
 - **cache.add(str)** - Add `str` to the logs.
 - **cache.addObj(obj)** - Stringifyy `obj` and add it to the logs.
@@ -53,10 +53,10 @@ then `JSON.stringify('[' + chunk + ']')` will return an array of POJO.
 ## Example
 
 ```js
-const storageBrowser = require('feathers-offline-log/storage-browser');
+const browserStorage = require('feathers-offline-log/browser-storage');
 const Cache = require('feathers-offline-log');
 
-const cache = new Cache(storageBrowser, { chunkMaxLen: 500000 }); // logs stored in 0.5 meg chunks
+const cache = new Cache(browserStorage, { chunkMaxLen: 500000 }); // logs stored in 0.5 meg chunks
 cache.config()
   .then(() => cache.addObj(obj1))
   .then(() => cache.addObj(obj2))
@@ -72,16 +72,16 @@ The included browser storage abstraction for
 may be used standalone.
 
 ```js
-const storageBrowser = require('feathers-offline-log/storage-browser');
+const browserStorage = require('feathers-offline-log/browser-storage');
 
-storageBrowser.config({ name: 'myApp', instanceName: 'auth' })
-  .then(() => storageBrowser.setItem('jwt', ' ... ')) // full key is myApp_auth/jwt
-  .then(() => storageBrowser.getItem('jwt'))
-  .then(str => storageBrowser.removeItem('jwt'))
-  .then(() => storageBrowser.clear())
-  .then(() => storageBrowser.length())
-  .then(numb => storageBrowser.keys())
-  .then(array => storageBrowser.iterate((value, key, iterationNumber) => { ... }));
+browserStorage.config({ name: 'myApp', instanceName: 'auth' })
+  .then(() => browserStorage.setItem('jwt', ' ... ')) // full key is myApp_auth/jwt
+  .then(() => browserStorage.getItem('jwt'))
+  .then(str => browserStorage.removeItem('jwt'))
+  .then(() => browserStorage.clear())
+  .then(() => browserStorage.length())
+  .then(numb => browserStorage.keys())
+  .then(array => browserStorage.iterate((value, key, iterationNumber) => { ... }));
 ````
 
 ## License

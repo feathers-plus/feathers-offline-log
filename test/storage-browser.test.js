@@ -1,36 +1,36 @@
 
 const assert = require('chai').assert;
-const storageBrowser = require('../src/storage-browser');
+const browserStorage = require('../src/browser-storage');
 
-describe('storage-browser', () => {
+describe('browser-storage', () => {
   beforeEach(() => {
-    return storageBrowser.config()
-      .then(() => storageBrowser.clear());
+    return browserStorage.config()
+      .then(() => browserStorage.clear());
   });
   
   it('can set/get a string', () => {
-    return storageBrowser.setItem('aa', 'aaaaa')
-      .then(() => storageBrowser.getItem('aa'))
+    return browserStorage.setItem('aa', 'aaaaa')
+      .then(() => browserStorage.getItem('aa'))
       .then(res => assert.equal(res, 'aaaaa'));
   });
   
   it('can set/get an object', () => {
-    return storageBrowser.setObj('a', { a: 'a' })
-      .then(() => storageBrowser.getObj('a'))
+    return browserStorage.setObj('a', { a: 'a' })
+      .then(() => browserStorage.getObj('a'))
       .then(res => assert.deepEqual(res, { a: 'a' }));
   });
   
   it('can remove an object', () => {
-    return storageBrowser.removeItem('a')
+    return browserStorage.removeItem('a')
       .then(res => assert.equal(res, undefined));
   });
   
   it('can get keys, #keys', () => {
-    return storageBrowser.setItem('ss', 'sssss')
-      .then(() => storageBrowser.setItem('tt', 'ttttt'))
+    return browserStorage.setItem('ss', 'sssss')
+      .then(() => browserStorage.setItem('tt', 'ttttt'))
       .then(() => Promise.all([
-        storageBrowser.keys(),
-        storageBrowser.length()
+        browserStorage.keys(),
+        browserStorage.length()
       ]))
       .then(([keys, len]) => {
         assert.deepEqual(keys.sort(), ['ss', 'tt']);
@@ -41,9 +41,9 @@ describe('storage-browser', () => {
   it('can iterate', () => {
     const store = {};
     
-    return storageBrowser.setItem('aa', 'aaaaa')
-      .then(() => storageBrowser.setItem('tt', 'ttttt'))
-      .then(() => storageBrowser.iterate((value1, key1) => {
+    return browserStorage.setItem('aa', 'aaaaa')
+      .then(() => browserStorage.setItem('tt', 'ttttt'))
+      .then(() => browserStorage.iterate((value1, key1) => {
         store[key1] = value1;
       }))
       .then(() => {
@@ -52,10 +52,10 @@ describe('storage-browser', () => {
   });
   
   it('can clear', () => {
-    return storageBrowser.clear()
+    return browserStorage.clear()
       .then(() => Promise.all([
-        storageBrowser.keys(),
-        storageBrowser.length()
+        browserStorage.keys(),
+        browserStorage.length()
       ]))
       .then(([keys, len]) => {
         assert.deepEqual(keys.sort(), []);

@@ -1,7 +1,7 @@
 
 const assert = require('chai').assert;
 
-const storageBrowser = require('../src/storage-browser');
+const browserStorage = require('../src/browser-storage');
 const Cache = require('../src');
 
 let cache;
@@ -19,7 +19,7 @@ describe('cache', () => {
     
     lens = objs.map((obj, i) => JSON.stringify(objs[i]).length);
   
-    cache = new Cache(storageBrowser, { chunkMaxLen: lens[1] + lens[2] + 50 });
+    cache = new Cache(browserStorage, { chunkMaxLen: lens[1] + lens[2] + 50 });
     return cache.config()
       .then(() => cache.clear())
       .then(() => cache.config());
