@@ -5,11 +5,11 @@ module.exports = {
   _logger: null,
 
   config (options = {}) {
-    options.instanceName = options.instanceName || 'log';
+    options.collection = options.collection || 'log';
     options.name = options.name || 'offline';
 
     localforage.config(options);
-    const _logger = this._logger = localforage.createInstance({ name: options.instanceName });
+    const _logger = this._logger = localforage.createInstance({ name: options.collection });
 
     this.setItem = _logger.setItem;
     this.getItem = _logger.getItem;

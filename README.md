@@ -40,6 +40,10 @@ npm install feathers-offline-log --save
 The options depend on the storage handler.
     - `browserStorage` - See options for
     [localforage](http://localforage.github.io/localForage/)
+        - `name` (optional, string, default 'offline') - Namespace for storage.
+        Typically the app name.
+        - `collection` (optional, string, default 'log') - Namespace within `name`.
+        Typically the name of the collection or table name.
 - **cache.add(str)** - Add `str` to the logs.
 - **cache.addObj(obj)** - Stringifyy `obj` and add it to the logs.
 - **cache.getOldestChunk()** - Returns the oldest chunk of logs.
@@ -55,7 +59,7 @@ const browserStorage = require('feathers-offline-log/browser-storage');
 const Cache = require('feathers-offline-log');
 
 const cache = new Cache(browserStorage, { chunkMaxLen: 500000 }); // logs stored in 0.5 meg chunks
-cache.config()
+cache.config({ name: 'myApp', collection: 'people' })
   .then(() => cache.addObj(obj1))
   .then(() => cache.addObj(obj2))
   .then(() => cache.addObj(obj3))
@@ -72,10 +76,10 @@ may be used standalone.
 ```js
 const browserStorage = require('feathers-offline-log/browser-storage');
 
-browserStorage.config({ name: 'myApp', instanceName: 'auth' })
-  .then(() => browserStorage.setItem('jwt', ' ... ')) // full key is myApp_auth/jwt
-  .then(() => browserStorage.getItem('jwt'))
-  .then(str => browserStorage.removeItem('jwt'))
+browserStorage.config({ name: 'myApp', collection: 'people' })
+  .then(() => browserStorage.setItem('john', ' ... ')) // full key is myApp_people/john
+  .then(() => browserStorage.getItem('john'))
+  .then(str => browserStorage.removeItem('john'))
   .then(() => browserStorage.clear())
   .then(() => browserStorage.length())
   .then(numb => browserStorage.keys())
