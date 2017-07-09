@@ -3,17 +3,17 @@ import makeDebug from 'debug';
 const debug = makeDebug('log-cache');
 
 export default class Cache {
-  constructor(storageHandler, options = {}) {
+  constructor (storageHandler, options = {}) {
     this._chunkMaxLen = options.chunkMaxLen || 500000; // 0.5 meg
     this._sep = options.sep || ',';
     this._storageHandler = storageHandler;
     this._currChunkKey = '';
     this._currChunk = '';
   }
-  
-  config(options = {}) {
+
+  config (options = {}) {
     debug('config started', options);
-    
+
     return this._storageHandler.config(options)
       .then(() => this._getChunkKeys())
       .then(keys => {
@@ -22,69 +22,69 @@ export default class Cache {
         } else {
           this._currChunkKey = '_0';
         }
-        
+
         debug('config ended. _currChunkKey=', this._currChunkKey);
       });
   }
-  
-  add(str, sep) {
+
+  add (str, sep) {
     debug('add started', this._currChunkKey);
     sep = sep || this._sep;
-  
+
     return new Promise(resolve => {
       if (this._currChunk.length + str.length <= this._chunkMaxLen) {
         return resolve();
       }
-  
+
       const promise = this._flushCurrChunk()
         .then(() => {
           this._currChunkKey = this._incrKey(this._currChunkKey);
           this._currChunk = '';
         });
-  
+
       return resolve(promise);
     })
       .then(() => {
         this._currChunk = `${this._currChunk}${this._currChunk.length ? sep : ''}${str}`;
         this._flushCurrChunk();
         debug('add ended. length', this._currChunk.length);
-      })
+      });
   }
-  
-  addObj(obj) {
+
+  addObj (obj) {
     debug('addObj entered');
     return this.add(JSON.stringify(obj), ',');
   }
 
-  getOldestChunk() {
+  getOldestChunk () {
     debug('getOldestChunk entered');
     return this._getChunkKeys()
       .then(keys => keys.length ? this._storageHandler.getItem(keys[0]) : undefined);
   }
-  
-  removeOldestChunk() {
+
+  removeOldestChunk () {
     debug('removeOldestChunk entered');
     return this._getChunkKeys()
       .then(keys => keys.length ? this._storageHandler.removeItem(keys[0]) : undefined);
   }
-  
-  clear() {
+
+  clear () {
     debug('clear entered');
     return this._storageHandler.clear();
   }
-  
-  _getChunkKeys() {
+
+  _getChunkKeys () {
     debug('_getChunkKeys entered');
     return this._storageHandler.keys()
       .then(keys => keys.filter(key => key.charAt(0) === '_').sort());
   }
-  
-  _incrKey(lastKey) {
+
+  _incrKey (lastKey) {
     return `_${(parseInt(lastKey.substr(1), 10) + 1) + ''}`;
   }
-  
-  _flushCurrChunk() {
+
+  _flushCurrChunk () {
     debug('_flushCurrChunk entered. key', this._currChunkKey);
     return this._storageHandler.setItem(this._currChunkKey, this._currChunk);
   }
-};
+}
