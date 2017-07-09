@@ -1,7 +1,7 @@
 
 module.exports = {
   logAndThrow,
-  mixin,
+  mixin
 };
 
 function logAndThrow (desc) {
@@ -11,15 +11,15 @@ function logAndThrow (desc) {
   };
 }
 
-function mixin(dest, ...objs) {
+function mixin (dest, ...objs) {
   const base = typeof dest === 'function' ? dest.prototype : dest;
-  
+
   objs.forEach(obj => {
     Object.keys(obj).forEach(key => {
       var descriptor = Object.getOwnPropertyDescriptor(obj, key);
       Object.defineProperty(base, key, descriptor);
     });
   });
-  
+
   return dest;
 }

@@ -19,7 +19,7 @@ describe('cache', () => {
     
     lens = objs.map((obj, i) => JSON.stringify(objs[i]).length);
   
-    cache = new Cache(storageBrowser, { chunkMaxLen: lens[1] + lens[2] });
+    cache = new Cache(storageBrowser, { chunkMaxLen: lens[1] + lens[2] + 50 });
     return cache.config()
       .then(() => cache.clear())
       .then(() => cache.config());
@@ -70,9 +70,7 @@ describe('cache', () => {
       .then(keys => assert.deepEqual(keys, ['_1']))
       
       .then(() => cache.getOldestChunk())
-      .then(chunk => {
-        assert.deepEqual(JSON.parse(`[${chunk}]`), [objs[2]]);
-      });
+      .then(chunk => assert.deepEqual(JSON.parse(`[${chunk}]`), [objs[2]]));
   });
 });
 
