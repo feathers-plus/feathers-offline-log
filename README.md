@@ -33,14 +33,14 @@ npm install feathers-offline-log --save
 
 - **cache = new Cache(storageHandler, options)** - Configure a new cache.
     - `storageHandler` (required, module) - Module responsible for persistence.
-        - `/browserStorage` - Browser support. See example below.
+        - `.../browser-storage` - Browser support. See example below.
     - `options` (optional) - Options for the cache.
         - `chunkMaxLen` (optional, number, default 500 000) - Maximum chunk size in chars.
         - `sep` (optional, char, default ',') - Separator char between log entries.
         Objects are always separated with ','.
 - **cache.config(options)** - Configure the storage handler for the cache.
 The options depend on the storage handler.
-    - `browserStorage` - See options for
+    - `.../browser-storage` - See options for
     [localforage](http://localforage.github.io/localForage/)
         - `name` (optional, string, default 'offline') - Namespace for storage.
         Typically the app name.
