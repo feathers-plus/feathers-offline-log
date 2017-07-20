@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "debug": "2.6.8",
-    "feathers-errors": "2.8.2",
+    "feathers-errors": "2.9.0",
     "localforage": "1.5.0"
   },
   "devDependencies": {
