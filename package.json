@@ -62,7 +62,7 @@
     "chai": "4.1.0",
     "humble-localstorage": "1.4.2",
     "istanbul": "1.1.0-alpha.1",
-    "mocha": "3.4.2",
+    "mocha": "3.5.0",
     "semistandard": "11.0.0",
     "shx": "0.2.2"
   }
